@@ -1,10 +1,47 @@
 #include <signal.h>
-#include <stdlib.h>
-#include <stdio.h>
-#include <unistd.h>
-#include "libft_42/libft.h"
+#include "./libft_42/libft.h"
+#include "./ft_printf/ft_printf.h" 
 
-static void	mt_kill(int pid, char *str)
+static void ft_sender(char c, int pid){
+	int i;
+	i = 0;
+	while(i < 8)
+	{
+		if ((c & (0x01 << i)) != 0)
+			kill(pid, SIGUSR1);
+		else
+			kill(pid, SIGUSR2);
+		usleep(100);
+		i++;
+	}	
+}
+
+int	main(int argc, char **argv)
+{
+	int	pid;
+	int size;
+	int	i;
+	i = 0;
+	size = 0;
+	if(argc == 3){
+		size = ft_strlen(argv[2]);
+		pid = ft_atoi(argv[1]);
+		while (i < size)
+		{
+			ft_sender(argv[2][i], pid);
+			i++;
+		}
+	}
+	else
+	{
+		ft_printf("Wrong format...");
+		return (0);
+	}
+	if(size == i)
+		ft_sender('\n', pid);
+}
+
+/* static void	mt_kill(int pid, char *str)
 {
 	int		i;
 	char	c;
@@ -28,11 +65,8 @@ static void	mt_kill(int pid, char *str)
 		kill(pid, SIGUSR1);
 		usleep(100);
 	}
-}
-
-int	main(int argc, char **argv)
-{
-	if (argc != 3 || !ft_strlen(argv[2]))
+} */
+	/* if (argc != 3 || !ft_strlen(argv[2]))
 		return (1);
 	ft_putstr_fd("Sent    : ", 1);
 	ft_putnbr_fd(ft_strlen(argv[2]), 1);
@@ -41,8 +75,7 @@ int	main(int argc, char **argv)
 	mt_kill(ft_atoi(argv[1]), argv[2]);
 	while (1)
 		pause();
-	return (0);
-}
+	return (0); */
 
 /* int x = 0;
 
